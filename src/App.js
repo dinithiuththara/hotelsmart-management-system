@@ -1,9 +1,27 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./auth/ProtectedRoute";
+
 function App() {
   return (
-    <div style={{padding:"40px", fontFamily:"sans-serif"}}>
-      <h1>HotelSmart Management System</h1>
-      <p>Project initialization successful.</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        <Route path="/" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
