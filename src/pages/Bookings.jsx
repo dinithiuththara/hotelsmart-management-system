@@ -140,7 +140,14 @@ export default function Bookings() {
           </button>
         </div>
 
-        <div style={{ marginTop: "30px" }}>
+        <div
+  style={{
+    display: "flex",
+    background: "#020617",
+    minHeight: "100vh",
+    color: "white"
+  }}
+>
           {bookings.length === 0 ? (
             <p>No bookings yet.</p>
           ) : (

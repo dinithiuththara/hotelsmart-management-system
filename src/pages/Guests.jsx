@@ -86,7 +86,14 @@ export default function Guests() {
         </div>
 
         {/* Guest List */}
-        <div style={{ marginTop: "30px" }}>
+        <div
+  style={{
+    display: "flex",
+    background: "#020617",
+    minHeight: "100vh",
+    color: "white"
+  }}
+>
           {guests.map((guest) => (
             <div
               key={guest.id}

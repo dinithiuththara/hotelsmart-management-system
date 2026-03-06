@@ -1,30 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
+  const location = useLocation();
+
+  const menu = [
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Rooms", path: "/rooms" },
+    { name: "Bookings", path: "/bookings" },
+    { name: "Guests", path: "/guests" },
+  ];
 
   return (
-    <div style={{
-      width:"220px",
-      height:"100vh",
-      background:"#0f172a",
-      color:"white",
-      padding:"20px"
-    }}>
+    <div
+      style={{
+        width: "230px",
+        minHeight: "100vh",
+        background: "#0f172a",
+        color: "white",
+        padding: "25px",
+      }}
+    >
+      <h2 style={{ marginBottom: "40px" }}>HotelSmart</h2>
 
-      <h2>HotelSmart</h2>
-
-      <div style={{marginTop:"30px", display:"flex", flexDirection:"column", gap:"10px"}}>
-
-        <Link to="/dashboard" style={{color:"white"}}>Dashboard</Link>
-
-        <Link to="/rooms" style={{color:"white"}}>Rooms</Link>
-
-        <Link to="/bookings" style={{color:"white"}}>Bookings</Link>
-
-        <Link to="/guests" style={{color:"white"}}>Guests</Link>
-
-      </div>
-
+      {menu.map((item) => (
+        <Link
+          key={item.path}
+          to={item.path}
+          style={{
+            display: "block",
+            padding: "12px",
+            marginBottom: "10px",
+            borderRadius: "8px",
+            background:
+              location.pathname === item.path ? "#1e293b" : "transparent",
+            color: "white",
+            textDecoration: "none",
+          }}
+        >
+          {item.name}
+        </Link>
+      ))}
     </div>
   );
 }

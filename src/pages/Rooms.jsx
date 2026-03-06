@@ -50,7 +50,14 @@ export default function Rooms() {
   }
 
   return (
-    <div style={{ display: "flex" }}>
+    <div
+  style={{
+    display: "flex",
+    background: "#020617",
+    minHeight: "100vh",
+    color: "white"
+  }}
+>
       <Sidebar />
 
       <div style={{ padding: "40px", width: "100%" }}>
