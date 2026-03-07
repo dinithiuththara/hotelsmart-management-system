@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../components/layout/Sidebar";
 
 const BOOKING_KEY = "hotel_bookings";
@@ -12,6 +12,9 @@ export default function Bookings() {
   const [room, setRoom] = useState("");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
+
+  const [search, setSearch] = useState("");
+  const [filterRoom, setFilterRoom] = useState("All");
 
   useEffect(() => {
     const savedBookings = localStorage.getItem(BOOKING_KEY);
@@ -91,29 +94,48 @@ export default function Bookings() {
     }
   }
 
+  const filteredBookings = useMemo(() => {
+    return bookings.filter((booking) => {
+      const matchesSearch =
+        booking.guest.toLowerCase().includes(search.toLowerCase()) ||
+        booking.room.toLowerCase().includes(search.toLowerCase());
+
+      const matchesRoom =
+        filterRoom === "All" ? true : booking.room === filterRoom;
+
+      return matchesSearch && matchesRoom;
+    });
+  }, [bookings, search, filterRoom]);
+
   return (
-    <div style={{ display: "flex" }}>
+    <div
+      style={{
+        display: "flex",
+        background: "#020617",
+        minHeight: "100vh",
+        color: "white",
+      }}
+    >
       <Sidebar />
 
       <div style={{ padding: "40px", width: "100%" }}>
         <h1>Bookings</h1>
-        <p>Create and manage hotel bookings.</p>
+        <p style={{ color: "#94a3b8" }}>Create and manage hotel bookings.</p>
 
         <div style={{ marginTop: "20px" }}>
           <input
             placeholder="Guest Name"
             value={guest}
             onChange={(e) => setGuest(e.target.value)}
-            style={{ marginRight: "10px", padding: "8px" }}
+            style={inputStyle}
           />
 
           <select
             value={room}
             onChange={(e) => setRoom(e.target.value)}
-            style={{ marginRight: "10px", padding: "8px" }}
+            style={inputStyle}
           >
             <option value="">Select Room</option>
-
             {rooms.map((r) => (
               <option key={r.id} value={r.number}>
                 Room {r.number} - {r.status}
@@ -125,42 +147,57 @@ export default function Bookings() {
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            style={{ marginRight: "10px", padding: "8px" }}
+            style={inputStyle}
           />
 
           <input
             type="date"
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
-            style={{ marginRight: "10px", padding: "8px" }}
+            style={inputStyle}
           />
 
-          <button onClick={addBooking} style={{ padding: "8px 14px" }}>
+          <button onClick={addBooking} style={buttonStyle}>
             Add Booking
           </button>
         </div>
 
         <div
-  style={{
-    display: "flex",
-    background: "#020617",
-    minHeight: "100vh",
-    color: "white"
-  }}
->
-          {bookings.length === 0 ? (
-            <p>No bookings yet.</p>
+          style={{
+            marginTop: "30px",
+            marginBottom: "20px",
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          <input
+            placeholder="Search by guest or room"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={inputStyle}
+          />
+
+          <select
+            value={filterRoom}
+            onChange={(e) => setFilterRoom(e.target.value)}
+            style={inputStyle}
+          >
+            <option value="All">All Rooms</option>
+            {rooms.map((r) => (
+              <option key={r.id} value={r.number}>
+                Room {r.number}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={{ marginTop: "20px" }}>
+          {filteredBookings.length === 0 ? (
+            <p style={{ color: "#94a3b8" }}>No bookings found.</p>
           ) : (
-            bookings.map((booking) => (
-              <div
-                key={booking.id}
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "15px",
-                  marginBottom: "10px",
-                  borderRadius: "8px",
-                }}
-              >
+            filteredBookings.map((booking) => (
+              <div key={booking.id} style={cardStyle}>
                 <h3>{booking.guest}</h3>
                 <p>Room: {booking.room}</p>
                 <p>Check In: {booking.checkIn}</p>
@@ -169,14 +206,7 @@ export default function Bookings() {
 
                 <button
                   onClick={() => deleteBooking(booking.id)}
-                  style={{
-                    background: "red",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 12px",
-                    cursor: "pointer",
-                    borderRadius: "4px",
-                  }}
+                  style={deleteButtonStyle}
                 >
                   Delete
                 </button>
@@ -188,3 +218,41 @@ export default function Bookings() {
     </div>
   );
 }
+
+const inputStyle = {
+  marginRight: "10px",
+  marginBottom: "10px",
+  padding: "10px",
+  borderRadius: "8px",
+  border: "1px solid #334155",
+  background: "#0f172a",
+  color: "white",
+};
+
+const buttonStyle = {
+  padding: "10px 16px",
+  borderRadius: "8px",
+  border: "none",
+  background: "#2563eb",
+  color: "white",
+  cursor: "pointer",
+};
+
+const deleteButtonStyle = {
+  background: "#dc2626",
+  color: "white",
+  border: "none",
+  padding: "8px 12px",
+  cursor: "pointer",
+  borderRadius: "6px",
+  marginTop: "10px",
+};
+
+const cardStyle = {
+  border: "1px solid #334155",
+  padding: "15px",
+  marginBottom: "10px",
+  borderRadius: "10px",
+  background: "#0f172a",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+};
