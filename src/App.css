@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+const cardStyle = {
+  background: "linear-gradient(145deg, #0f172a, #1e293b)",
+  border: "1px solid #334155",
+  padding: "25px",
+  borderRadius: "14px",
+  boxShadow: "0 8px 25px rgba(0,0,0,0.5)",
+  transition: "0.3s"
+};
